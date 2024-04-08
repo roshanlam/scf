@@ -1,7 +1,6 @@
 <script>
 import PageTitle from './components/PageTitle.vue';
-import HomeHero from './pages/HomeHero.vue';
-import HomeSteps from './pages/HomeSteps.vue';
+import Index from './pages/Index.vue';
 
 export default {
   components: {
@@ -15,7 +14,6 @@ export default {
 <template>
   <div>
     <PageTitle title="Home" />
-    <HomeHero />
-    <HomeSteps />
+    <Index/>
   </div>
 </template>

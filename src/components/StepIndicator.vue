@@ -1,15 +1,4 @@
-<template>
-    <div :class="['StepIndicator', className]">
-      <div :class="bubbleClasses">
-        {{ number }}
-      </div>
-      <div :class="['StepIndicator__text']">
-        {{ text }}
-      </div>
-    </div>
-  </template>
-  
-  <script>
+<script>
   export default {
     props: {
       className: {
@@ -41,6 +30,17 @@
     }
   }
   </script>
+
+<template>
+  <div :class="['StepIndicator', className]">
+    <div :class="bubbleClasses">
+      {{ number }}
+    </div>
+    <div :class="['StepIndicator__text']">
+      {{ text }}
+    </div>
+  </div>
+</template>
   
   <style scoped>
   .StepIndicator {
