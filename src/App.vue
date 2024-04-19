@@ -5,8 +5,7 @@ import Index from './pages/Index.vue';
 export default {
   components: {
     PageTitle,
-    HomeHero,
-    HomeSteps
+    Index
   }
 }
 </script>
