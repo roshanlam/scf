@@ -1,7 +1,7 @@
 <script>
 import VideoPlayer from '../components/VideoPlayer.vue';
 export default {
-  name: 'App',
+  name: 'Index',
   components:{
     VideoPlayer
   }
@@ -12,13 +12,13 @@ export default {
   <div id="app" class="bg-white font-sans text-white">
     <div class="container mx-auto px-11 py-12">
       <header class="fixed top-0 inset-x-0 z-50 bg-white flex justify-between items-center py-4">
-      <h1 class="text-3xl font-bold text-[#FF4136]">Socio<span style="color: #2A3945">Coders</span></h1>
-      <nav class="flex space-x-6">
-        <a href="#" class="text-lg" style="color: #FF4136">Learn</a>
-          <a href="#" class="text-lg" style="color: #FF4136">Login</a>
-        <a href="#" class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out">Signup</a>
-      </nav>
-    </header>
+        <h1 class="text-3xl font-bold text-[#FF4136]">Socio<span style="color: #2A3945">Coders</span></h1>
+        <nav class="flex items-center space-x-6">
+          <a href="#" class="text-lg" style="color: #FF4136">Learn</a>
+          <a href="/auth" class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">SignIn/SignUp</a>
+        </nav>
+      </header>
+
 
     <main class="flex flex-col items-center justify-start pt-32 min-h-screen">
         <h2 class="text-5xl font-bold mb-4 flex flex-col md:flex-row justify-center space-x-0 md:space-x-4">
@@ -31,7 +31,7 @@ export default {
         </p>
         <div class="app-container">
           <VideoPlayer youtubeVideoId="DaxcmbWcdTA" videoSource="https://www.youtube.com/watch?v=DaxcmbWcdTA" />
-  </div>
+        </div>
     </main>
     </div>
   </div>

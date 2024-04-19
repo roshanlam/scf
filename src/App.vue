@@ -3,16 +3,15 @@ import PageTitle from './components/PageTitle.vue';
 import Index from './pages/Index.vue';
 
 export default {
-  components: {
-    PageTitle,
-    Index
-  }
+  
 }
 </script>
 
 <template>
-  <div>
+  <div id="app">
     <PageTitle title="Home" />
-    <Index/>
+    <main>
+      <router-view />
+    </main>
   </div>
 </template>
