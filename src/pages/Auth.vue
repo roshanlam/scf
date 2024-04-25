@@ -8,6 +8,9 @@
   </div>
   <div>
     <button @click="sign_out">Sign Out</button>
+    <button @click="enrollInClass(1)">Enroll in Course</button>
+    <button @click="postToForum(1, 'hello', 'yellow')">Post to forum</button>
+    <button @click="getAllPosts(1)">Log all posts</button>
   </div>
 </template>
 
@@ -69,6 +72,65 @@ export default {
         console.error("Failed to send authorization code:", error);
       }
     },
+    async enrollInClass(classID) {
+      try {
+        // Retrieve sessionID and classID from component's data
+        const sessionID = localStorage.getItem('sessionID');
+        const classID = 1;
+
+        // Make a POST request to enroll in class endpoint with sessionID and classID
+        const response = await axios.post(`http://localhost:8000/enroll-in-class/`, {
+          sessionID,
+          classID,
+        });
+        // Log the response from the backend
+        console.log(response.data);
+
+        // Optionally, you can perform additional actions after enrollment
+      } catch (error) {
+        console.error("Failed to enroll in class:", error);
+      }
+    },
+    async postToForum(classID, title, content) {
+      try {
+        // Retrieve sessionID and classID from component's data
+        const sessionID = localStorage.getItem('sessionID');
+
+        // Make a POST request to the forum endpoint with sessionID, classID, title, and content
+        const response = await axios.post(`http://localhost:8000/post-to-forum/`, {
+          sessionID,
+          classID,
+          title,
+          content
+        });
+        
+        // Log the response from the backend
+        console.log(response.data);
+
+        // Optionally, you can perform additional actions after posting to the forum
+      } catch (error) {
+        console.error("Failed to send forum post:", error);
+      }
+    },
+    async getAllPosts(classID) {
+      try {
+        // Retrieve sessionID and classID from component's data
+        const sessionID = localStorage.getItem('sessionID');
+
+        // Make a POST request to the forum endpoint with sessionID, classID, title, and content
+        const response = await axios.post(`http://localhost:8000/get-all-posts/`, {
+          sessionID,
+          classID,
+        });
+        
+        // Log the response from the backend
+        console.log(response.data);
+
+        // Optionally, you can perform additional actions after posting to the forum
+      } catch (error) {
+        console.error("Failed to send forum post:", error);
+      }
+    },
     async sign_out() {
       try {
         // Retrieve session ID from local storage
@@ -99,7 +161,8 @@ export default {
       } catch (error) {
         console.error("Failed to sign out:", error);
       }
-    }
+    },
+    
   }
 };
 </script>
