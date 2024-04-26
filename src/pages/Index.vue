@@ -2,7 +2,7 @@
 import VideoPlayer from '../components/VideoPlayer.vue';
 export default {
   name: 'Index',
-  components:{
+  components: {
     VideoPlayer
   }
 };
@@ -14,15 +14,18 @@ export default {
       <header class="fixed top-0 inset-x-0 z-50 bg-white flex justify-between items-center py-4">
         <h1 class="text-3xl font-bold text-[#FF4136]">Socio<span style="color: #2A3945">Coders</span></h1>
         <nav class="flex items-center space-x-6">
-          <a href="#" class="text-lg" style="color: #FF4136">Learn</a>
-          <a href="/auth" class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">SignIn/SignUp</a>
+          <a href="/enrolled-classes" class="text-lg" style="color: #FF4136">Courses</a>
+          <a href="/forum" class="text-lg" style="color: #FF4136">Forum</a>
+          <a href="/auth"
+            class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">SignIn/SignUp</a>
         </nav>
       </header>
 
 
-    <main class="flex flex-col items-center justify-start pt-32 min-h-screen">
+      <main class="flex flex-col items-center justify-start pt-32 min-h-screen">
         <h2 class="text-5xl font-bold mb-4 flex flex-col md:flex-row justify-center space-x-0 md:space-x-4">
-          <p class="mb-4 md:mb-0"><span style="color: #2A3945">Learn</span></p>
+          <p class="mb-4 md:mb-0"><span style="color: #2A3945">Courses</span></p>
+          <p class="mb-4 md:mb-0"><span style="color: #2A3945">Forum</span></p>
           <p class="mb-4 md:mb-0"><span style="color: #FF4136;">Create</span></p>
           <p class="mb-4 md:mb-0"><span style="color: #2A3945">Empower</span></p>
         </h2>
@@ -32,7 +35,7 @@ export default {
         <div class="app-container">
           <VideoPlayer youtubeVideoId="DaxcmbWcdTA" videoSource="https://www.youtube.com/watch?v=DaxcmbWcdTA" />
         </div>
-    </main>
+      </main>
     </div>
   </div>
 </template>
@@ -59,14 +62,18 @@ a:hover {
   text-decoration: none;
 }
 
-button, a {
+button,
+a {
   outline: none;
   cursor: pointer;
 }
+
 p {
-  color: #2A3945;
+  color: #35452a;
 }
-button:hover, a:hover {
+
+button:hover,
+a:hover {
   text-decoration: none;
 }
 
@@ -77,7 +84,4 @@ button:hover, a:hover {
 .nav a:hover {
   color: #FF4136;
 }
-
-
-
 </style>
