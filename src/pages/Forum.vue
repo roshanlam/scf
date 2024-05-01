@@ -2,14 +2,16 @@
   <div id="app" class="bg-white font-sans text-white">
     <div class="container mx-auto px-11 py-12">
       <header class="fixed top-0 inset-x-0 z-50 bg-white flex justify-between items-center py-4">
-        <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer">
+        <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer ml-7">
           <span class="text-[#FF4136] font-bold">Socio</span><span class="text-[#2A3945] font-bold">Coders</span>
         </router-link>
+
 
         <nav class="flex items-center space-x-6">
           <h2>Select Class</h2>
           <select v-model="selectedCourseId" :placeholder="'Select course'">
-            <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">( {{ classItem.class_name }} )</option>
+            <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">( {{
+              classItem.class_name }} )</option>
           </select>
           <router-link to="/enrolled-classes"
             class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Courses</router-link>
@@ -26,7 +28,8 @@
             <h2>All Posts</h2>
             <div class="post-list" ref="postList">
               <div v-for="post in filteredPosts" :key="post.id" class="post-item"
-                :class="{ 'teacher-post': post.teacher_post, 'selected-post': selectedPost === post }" @click="togglePostSelection(post)">
+                :class="{ 'teacher-post': post.teacher_post, 'selected-post': selectedPost === post }"
+                @click="togglePostSelection(post)">
                 <h3>{{ post.title }}</h3>
                 <p>{{ post.content }}</p>
               </div>
@@ -114,6 +117,7 @@ export default {
         this.selectedPost = null; // Deselect the post if already selected
       } else {
         this.selectedPost = post; // Select the post if not already selected
+        this.selectPost(post)
         // Fetch comments or other actions if needed
       }
     },

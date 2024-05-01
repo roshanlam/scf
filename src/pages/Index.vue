@@ -103,7 +103,7 @@ export default {
   <div id="app" class="bg-white font-sans text-white">
     <div class="container mx-auto px-11 py-12">
       <header class="fixed top-0 inset-x-0 z-50 bg-white flex justify-between items-center py-4">
-        <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer">
+        <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer ml-7">
           <span class="text-[#FF4136] font-bold">Socio</span><span class="text-[#2A3945] font-bold">Coders</span>
         </router-link>
        
