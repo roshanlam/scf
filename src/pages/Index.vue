@@ -108,6 +108,8 @@ export default {
         </router-link>
        
         <nav class="flex items-center space-x-6">
+          <router-link to="/videos"
+            class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Videos</router-link>
           <router-link to="/enrolled-classes"
             class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Courses</router-link>
           <router-link to="/forum"
@@ -127,12 +129,6 @@ export default {
         <p class="text-xl max-w-lg text-center mx-auto">
           Learn the technology to create what you want for the common good and empower
         </p>
-        <div v-if="userDetails">
-          <p class="text-lg">Hi, {{ userDetails.name }}</p>
-        </div>
-        <div class="app-container">
-          <VideoPlayer youtubeVideoId="DaxcmbWcdTA" videoSource="https://www.youtube.com/watch?v=DaxcmbWcdTA" />
-        </div>
       </main>
     </div>
   </div>

@@ -9,12 +9,15 @@
 
         <nav class="flex items-center space-x-6">
           <h2>Select Class</h2>
+          <p v-if="userPoints !== null" class="text-lg font-semibold text-gray-600">{{ userPoints }} Points</p>
           <select v-model="selectedCourseId" :placeholder="'Select course'">
             <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">( {{
               classItem.class_name }} )</option>
           </select>
           <router-link to="/enrolled-classes"
             class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Courses</router-link>
+          <router-link to="/videos"
+            class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Videos</router-link>
         </nav>
       </header>
 
@@ -35,6 +38,7 @@
               </div>
             </div>
             <button @click="showNewPostForm = !showNewPostForm">Create New Post</button>
+            <button @click="updateUserPoints">Add Point</button>
           </div>
 
           <div class="content">
@@ -92,11 +96,14 @@ export default {
       commentBody: '',
       searchQuery: '',
       showNewPostForm: false,
-      showSelectedPostDetails: false
+      showSelectedPostDetails: false,
+      userPoints: null
+
     };
   },
   mounted() {
     this.fetchEnrolledClasses();
+    this.getUserPoints();
     if (this.selectedCourseId) {
       this.fetchPosts();
     }
@@ -119,6 +126,33 @@ export default {
         this.selectedPost = post; // Select the post if not already selected
         this.selectPost(post)
         // Fetch comments or other actions if needed
+      }
+    },
+    async getUserPoints() {
+      try {
+        const sessionID = localStorage.getItem('sessionID');
+        const response = await axios.post('http://localhost:8000/get-user-points/', {
+          sessionID: sessionID,
+        });
+        
+        // Store user points in data property
+        this.userPoints = response.data.points;
+      } catch (error) {
+        console.error('Error fetching user points:', error);
+      }
+    },
+    async updateUserPoints() {
+      try {
+        const sessionID = localStorage.getItem('sessionID');
+        const response = await axios.post('http://localhost:8000/update-user-points/', {
+          sessionID: sessionID,
+          pointsDelta: 1,
+        });
+        
+        // Update user points after adding a point
+        this.getUserPoints();
+      } catch (error) {
+        console.error('Error updating user points:', error);
       }
     },
     async selectPost(post) {

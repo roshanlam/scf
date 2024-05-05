@@ -7,6 +7,13 @@
         </router-link>
 
         <nav class="flex items-center space-x-6">
+          <select v-model="selectedCourseId" :placeholder="'Select course'">
+            <p v-if="userPoints !== null" class="text-lg font-semibold text-gray-600">{{ userPoints }} Points</p>
+            <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">( {{
+              classItem.class_name }} )</option>
+          </select>
+          <router-link to="/videos"
+            class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Videos</router-link>
           <router-link to="/forum"
             class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Forum</router-link>
         </nav>
@@ -38,6 +45,17 @@
           <input type="text" id="newClassCode" v-model="newCourseCode" />
           <button @click="enrollInClass(newCourseCode)">Enroll</button>
         </div>
+
+        <div class="upload-video">
+          <h2>Upload Video</h2>
+          <div>
+            <input type="text" placeholder="YouTube URL" v-model="videoUrl">
+          </div>
+          <div>
+            <input type="text" placeholder="Video Title" v-model="videoTitle">
+          </div>
+          <button @click="uploadVideo">Upload Video</button>
+        </div>
       </main>
     </div>
   </div>
@@ -55,7 +73,10 @@ export default {
       newCourseNumber: '',
       newClassCode: '',
       newClassName: "",
-      newCourseCode: ''
+      newCourseCode: '',
+      videoUrl: '',
+      videoTitle: '',
+      selectedCourseId: isNaN(Number(localStorage.getItem('selectedCourse'))) ? null : Number(localStorage.getItem('selectedCourse')),
     };
   },
   mounted() {
@@ -68,6 +89,28 @@ export default {
       const storedUserDetails = localStorage.getItem('userDetails');
       if (storedUserDetails) {
         this.userDetails = JSON.parse(storedUserDetails);
+      }
+    },
+    async uploadVideo() {
+      try {
+        const sessionID = localStorage.getItem('sessionID');
+        const classID = this.selectedCourseId; // Assuming you have a selectedCourseId property
+        
+        if (typeof classID === 'number') {
+          const response = await axios.post(`http://localhost:8000/post-class-video/`, {
+            sessionID,
+            classID,
+            videoURL: this.videoUrl,
+            videoTitle: this.videoTitle
+          });
+          console.log(response.data);
+
+          // Clear input fields after upload
+          this.videoUrl = '';
+          this.videoTitle = '';
+        }
+      } catch (error) {
+        console.error("Failed to upload video:", error);
       }
     },
     async fetchEnrolledClasses() {
@@ -83,6 +126,15 @@ export default {
       } catch (error) {
         console.error('Failed to fetch enrolled classes:', error);
       }
+    },
+    async getUserPoints() {
+        try {
+            const sessionID = localStorage.getItem('sessionID');
+            const response = await axios.post('http://localhost:8000/get-user-points/', { sessionID });
+            this.userPoints = response.data.points;
+        } catch (error) {
+            console.error('Error fetching user points:', error);
+        }
     },
     async createNewClass() {
       try {
@@ -190,5 +242,22 @@ export default {
 
 .enrolled-classes-text {
   color: black;
+}
+.upload-video {
+  margin-top: 20px;
+}
+.upload-video input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.upload-video button {
+  background-color: #FF4136;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.upload-video button:hover {
+  background-color: #FF6347;
 }
 </style>
