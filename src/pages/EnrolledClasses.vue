@@ -1,60 +1,48 @@
 <template>
-  <div id="app" class="bg-white font-sans text-white">
-    <div class="container mx-auto px-11 py-12">
-      <header class="fixed top-0 inset-x-0 z-50 bg-white flex justify-between items-center py-4">
-        <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer ml-7">
-          <span class="text-[#FF4136] font-bold">Socio</span><span class="text-[#2A3945] font-bold">Coders</span>
+  <div id="app" class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-4">
+      <header class="bg-white fixed top-0 inset-x-0 z-50 shadow flex justify-between items-center py-2 px-4">
+        <router-link to="/" class="text-3xl font-bold text-[#FF4136] flex items-center gap-2">
+          <span class="text-[#FF4136]">Socio</span><span class="text-gray-800">Coders</span>
         </router-link>
-
-        <nav class="flex items-center space-x-6">
-          <select v-model="selectedCourseId" :placeholder="'Select course'">
+        <nav class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-user-circle text-xl text-gray-600"></i>
             <p v-if="userPoints !== null" class="text-lg font-semibold text-gray-600">{{ userPoints }} Points</p>
-            <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">( {{
-              classItem.class_name }} )</option>
+          </div>
+          <select v-model="selectedCourseId" class="rounded border border-gray-300 text-gray-700 py-2 px-3">
+            <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">{{ classItem.class_name }}</option>
           </select>
-          <router-link to="/videos"
-            class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Videos</router-link>
-          <router-link to="/forum"
-            class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Forum</router-link>
+          <router-link to="/enrolled-classes" class="btn primary">Courses</router-link>
+          <router-link to="/videos" class="btn primary">Videos</router-link>
         </nav>
       </header>
-
-      <main class="flex flex-col items-center justify-start pt-32 min-h-screen">
-        <p class="text-xl max-w-lg text-center mx-auto enrolled-classes-text">Enrolled Classes</p>
-        <ul v-if="enrolledClasses.length > 0" class="enrolled-list">
-          <li v-for="classItem in enrolledClasses" :key="classItem.id" class="enrolled-item">
-            ({{ classItem.class_name }})
-          </li>
-        </ul>
-        <p class="text-xl max-w-lg text-center mx-auto enrolled-classes-text" v-else>You are not enrolled in any classes
-          yet.</p>
-
-        <div>
-          <label class="text-xl max-w-lg text-center mx-auto enrolled-classes-text" for="className">Class Name:</label>
-          <input type="text" id="className" v-model="newClassName" />
+      <main class="pt-20">
+        <div class="text-center my-5">
+          <p class="text-xl">Enrolled Classes</p>
+          <ul v-if="enrolledClasses.length" class="mt-3">
+            <li v-for="classItem in enrolledClasses" :key="classItem.id" class="py-2">{{ classItem.class_name }}</li>
+          </ul>
+          <p v-else>You are not enrolled in any classes yet.</p>
         </div>
-        <div>
-          <label class="text-xl max-w-lg text-center mx-auto enrolled-classes-text" for="classId">Class Code:</label>
-          <input type="text" id="classId" v-model="newClassCode" />
-        </div>
-        <button @click="createNewClass">Create New Class</button>
-
-        <div>
-          <label class="text-xl max-w-lg text-center mx-auto enrolled-classes-text" for="courseNumber">Course
-            Code:</label>
-          <input type="text" id="newClassCode" v-model="newCourseCode" />
-          <button @click="enrollInClass(newCourseCode)">Enroll</button>
-        </div>
-
-        <div class="upload-video">
-          <h2>Upload Video</h2>
-          <div>
-            <input type="text" placeholder="YouTube URL" v-model="videoUrl">
-          </div>
-          <div>
-            <input type="text" placeholder="Video Title" v-model="videoTitle">
-          </div>
-          <button @click="uploadVideo">Upload Video</button>
+        <div class="flex justify-around flex-wrap">
+          <section class="card">
+            <h2>Create New Class</h2>
+            <input v-model="newClassName" placeholder="Class Name" class="input">
+            <input v-model="newClassCode" placeholder="Class Code" class="input">
+            <button @click="createNewClass" class="btn primary">Create</button>
+          </section>
+          <section class="card">
+            <h2>Enroll in a Class</h2>
+            <input v-model="newCourseCode" placeholder="Course Code" class="input">
+            <button @click="enrollInClass(newCourseCode)" class="btn secondary">Enroll</button>
+          </section>
+          <section class="card">
+            <h2>Upload Video</h2>
+            <input v-model="videoUrl" placeholder="YouTube URL" class="input">
+            <input v-model="videoTitle" placeholder="Video Title" class="input">
+            <button @click="uploadVideo" class="btn primary">Upload</button>
+          </section>
         </div>
       </main>
     </div>
@@ -137,19 +125,27 @@ export default {
         }
     },
     async createNewClass() {
+      if (!this.newClassName || !this.newClassCode) {
+          alert("Both class name and class code are required.");
+          return;
+      }
       try {
-        const sessionID = localStorage.getItem('sessionID');
-
-        const response = await axios.post('http://localhost:8000/create-new-class/', {
-          sessionID,
-          class_name: this.newClassName,
-          class_code: this.newClassCode,
-        });
-
-        console.log(response.data.message);
-        this.fetchEnrolledClasses();
+          const sessionID = localStorage.getItem('sessionID');
+          const response = await axios.post('http://localhost:8000/create-new-class/', {
+              sessionID,
+              class_name: this.newClassName,
+              class_code: this.newClassCode,
+          });
+          console.log(response.data);
+          if (response.data && response.data.message) {
+              alert("Class created successfully: " + response.data.message);
+              this.newClassName = '';
+              this.newClassCode = '';
+              this.fetchEnrolledClasses();
+          }
       } catch (error) {
-        console.error('Failed to create new class:', error);
+          console.error('Failed to create new class:', error.response ? error.response.data : error);
+          alert("Failed to create class: " + (error.response.data.error || "Server error"));
       }
     },
     async enrollInClass(classCode) {
@@ -234,30 +230,70 @@ export default {
 </script>
 
 <style scoped>
-.enrolled-list {
-  color: black;
-  /* Set the text color to black */
-  /* Add any other styles as needed */
+input, select, textarea {
+  background-color: white; /* White background for input fields */
+  border: 1px solid #ccc; /* Subtle border for definition */
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border-radius: 0.25rem; /* Rounded corners for a softer look */
+  width: 100%; /* Ensures full width in container context */
+  box-sizing: border-box; /* Includes padding and border in the element's width */
 }
 
-.enrolled-classes-text {
-  color: black;
+input:focus, select:focus, textarea:focus {
+  border-color: #FF4136; /* Highlight color when focused */
+  outline: none; /* Removes default outline to use border color only */
 }
-.upload-video {
-  margin-top: 20px;
-}
-.upload-video input {
-  width: 100%;
-  margin-bottom: 10px;
-}
-.upload-video button {
-  background-color: #FF4136;
+
+.btn {
+  background-color: #FF4136; /* Primary color for buttons */
   color: white;
-  border: none;
-  padding: 10px 20px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
-.upload-video button:hover {
-  background-color: #FF6347;
+
+.btn:hover {
+  background-color: #E33E2B; /* Darker shade for hover effect */
+}
+
+.post-item, .selected-post {
+  background-color: white; /* White background for posts */
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc; /* Light border for separation */
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+}
+
+.post-item:hover, .selected-post {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow on hover for depth */
+}
+
+/* Additional styles for layout and spacing */
+.container {
+  max-width: 960px;
+  margin: auto;
+  padding: 1rem;
+}
+
+header, main {
+  padding: 1rem;
+  text-align: center;
+}
+
+.nav {
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  margin-top: 2rem;
 }
 </style>
+

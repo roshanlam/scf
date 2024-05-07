@@ -1,81 +1,55 @@
 <template>
-  <div id="app" class="bg-white font-sans text-white">
-    <div class="container mx-auto px-11 py-12">
-      <header class="fixed top-0 inset-x-0 z-50 bg-white flex justify-between items-center py-4">
-        <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer ml-7">
-          <span class="text-[#FF4136] font-bold">Socio</span><span class="text-[#2A3945] font-bold">Coders</span>
-        </router-link>
-
-
-        <nav class="flex items-center space-x-6">
-          <h2>Select Class</h2>
-          <p v-if="userPoints !== null" class="text-lg font-semibold text-gray-600">{{ userPoints }} Points</p>
-          <select v-model="selectedCourseId" :placeholder="'Select course'">
-            <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">( {{
-              classItem.class_name }} )</option>
-          </select>
-          <router-link to="/enrolled-classes"
-            class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Courses</router-link>
-          <router-link to="/videos"
-            class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Videos</router-link>
-        </nav>
-      </header>
-
-      <main class="flex flex-col items-center justify-start pt-32 min-h-screen">
-
-        <div class="main-container">
-          <div class="posts-panel">
-            <div class="search-bar">
-              <input type="text" placeholder="Search Posts" v-model="searchQuery" @input="filterPosts">
-            </div>
-            <h2>All Posts</h2>
-            <div class="post-list" ref="postList">
-              <div v-for="post in filteredPosts" :key="post.id" class="post-item"
-                :class="{ 'teacher-post': post.teacher_post, 'selected-post': selectedPost === post }"
-                @click="togglePostSelection(post)">
-                <h3>{{ post.title }}</h3>
-                <p>{{ post.content }}</p>
-              </div>
-            </div>
-            <button @click="showNewPostForm = !showNewPostForm">Create New Post</button>
-            <button @click="updateUserPoints">Add Point</button>
-          </div>
-
-          <div class="content">
-            <div v-if="showNewPostForm">
-              <h2>Create a New Post</h2>
-              <input type="text" placeholder="Title" v-model="newPostTitle">
-              <textarea placeholder="Content" v-model="newPostContent"></textarea>
-              <button @click="postToForum">Post to Forum</button>
-            </div>
-
-            <div v-if="selectedPost">
-              <h3>Selected Post</h3>
-              <div class="post-item">
-                <h3>{{ selectedPost.title }}</h3>
-                <p>{{ selectedPost.content }}</p>
-              </div>
-              <div v-if="selectedPost != null">
-                <h3>Comments</h3>
-                <div v-for="comment in selectedPostComments" :key="comment.id" class="comment-item">
-                  <h4>{{ comment.title }}</h4>
-                  <p>{{ comment.content }}</p>
-                </div>
-              </div>
-
-              <div>
-                <h3>Add Comment</h3>
-                <input type="text" placeholder="Comment Title" v-model="commentName">
-                <textarea placeholder="Comment Body" v-model="commentBody"></textarea>
-                <button @click="sendComment">Send Comment</button>
-              </div>
-            </div>
-          </div>
+  <div id="app" class="font-sans">
+    <div class="container mx-auto px-4 py-4">
+      <header class="bg-white fixed top-0 inset-x-0 z-50 shadow-md">
+        <div class="container flex justify-between items-center py-4 px-6 mx-auto">
+          <router-link to="/" class="text-3xl font-bold text-[#FF4136]">SocioCoders</router-link>
+          <nav class="flex items-center space-x-4">
+            <p v-if="userPoints !== null" class="text-lg font-semibold">
+              {{ userPoints }} Points
+            </p>
+            <select v-model="selectedCourseId" class="p-2 rounded border border-gray-300 bg-white">
+              <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">
+                {{ classItem.class_name }}
+              </option>
+            </select>
+            <router-link to="/enrolled-classes" class="btn">Courses</router-link>
+            <router-link to="/videos" class="btn">Videos</router-link>
+          </nav>
         </div>
-      </main>
+      </header>
+      <div class="text-center pt-24">
+        <div class="inline-block w-full max-w-md p-4 bg-white rounded-lg shadow">
+          <input type="text" placeholder="Search Posts" v-model="searchQuery" @input="filterPosts" class="p-2 w-full border rounded mb-4">
+          <button class="btn mr-2" @click="showNewPostForm = true">Create New Post</button>
+          <button class="btn" @click="updateUserPoints">Add Point</button>
+        </div>
+        <section class="mt-4">
+          <h2 class="font-semibold text-lg mb-4">All Posts</h2>
+          <div v-for="post in filteredPosts" :key="post.id" class="p-4 bg-white rounded-lg shadow my-2 cursor-pointer" @click="togglePostSelection(post)">
+            <h3 class="font-bold">{{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+          </div>
+          <div v-if="selectedPost" class="bg-white rounded-lg shadow mt-4 p-4">
+            <h3 class="font-bold">{{ selectedPost.title }}</h3>
+            <p>{{ selectedPost.content }}</p>
+            <div v-for="comment in selectedPostComments" :key="comment.id" class="mt-2 p-2 border-t">
+              <h4 class="font-semibold">{{ comment.title }}</h4>
+              <p>{{ comment.content }}</p>
+            </div>
+            <div class="mt-4">
+              <input type="text" placeholder="Comment Title" v-model="commentName" class="p-2 w-full border rounded">
+              <textarea placeholder="Comment Body" v-model="commentBody" class="p-2 w-full border rounded my-2"></textarea>
+              <button class="btn" @click="sendComment">Send Comment</button>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
 </template>
+
+
 
 <script>
 import axios from 'axios';
@@ -238,30 +212,37 @@ export default {
       }
     },
     async postToForum() {
-      try {
-        const sessionID = localStorage.getItem('sessionID');
-        const classID = this.selectedCourseId;
+    console.log("Posting to forum with:", {
+        sessionID: localStorage.getItem('sessionID'),
+        classID: this.selectedCourseId || 0,
+        title: this.newPostTitle || "No Title Provided",
+        content: this.newPostContent || "No Content Provided"
+    });
 
-        if (typeof classID === 'number') {
-          const response = await axios.post(`http://localhost:8000/post-to-forum/`, {
-            sessionID,
-            classID,
+    if (!this.selectedCourseId) {
+        alert("Please select a class ID.");
+        return;
+    }
+    if (!this.newPostTitle || !this.newPostContent) {
+        alert("Please complete all fields.");
+        return;
+    }
+
+    try {
+        const response = await axios.post(`http://localhost:8000/post-to-forum/`, {
+            sessionID: localStorage.getItem('sessionID'),
+            classID: this.selectedCourseId,
             title: this.newPostTitle,
             content: this.newPostContent
-          });
-          console.log(this.newPostContent, this.newPostTitle);
+        });
 
-          console.log(response.data);
-
-          this.newPostTitle = '';
-          this.newPostContent = '';
-
-          this.fetchPosts();
-        }
-      } catch (error) {
+        console.log("Response received:", response.data);
+        // Additional code to handle the response
+    } catch (error) {
         console.error("Failed to send forum post:", error);
-      }
-    },
+    }
+}
+
   },
   watch: {
     selectedCourseId(newCourseId) {
@@ -273,48 +254,72 @@ export default {
         localStorage.removeItem('selectedCourse');
       }
     }
-  }
+  },
+
 };
 </script>
+
 <style>
-main {
-  color: black;
+body {
+  background-color: #f9fafb; 
+  color: #1f2937;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.selected-post {
+.btn {
+  background-color: #FF4136;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px; 
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #E33E2B;
+}
+
+header {
+  background-color: white; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+main {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+input[type="text"], textarea {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #1f2937;
+  padding: 8px 12px;
+  border-radius: 4px;
+  width: 100%;
+}
+
+input[type="text"]:focus, textarea:focus {
+  border-color: #FF4136;
+  outline: none;
+}
+
+.posts-panel, .content {
+  background-color: white; 
+  margin: 1rem;
+  flex-basis: calc(50% - 2rem); /* Half width minus margin */
+  max-width: calc(50% - 2rem); /* Prevents growth beyond calc size */
+}
+
+.post-item:hover, .selected-post {
   background-color: #f0f0f0;
 }
 
-.main-container {
-  display: flex;
-}
-
-.posts-panel {
-  width: 300px;
-  /* Adjust width as needed */
-  height: calc(100vh - 120px);
-  /* Adjust height as needed */
-  overflow-y: auto;
-  /* Enable vertical scrolling */
-  border-right: 1px solid #ccc;
-  /* Add a border to separate from the content */
-  padding: 20px;
-  /* Add padding for spacing */
-  flex: 0 0 auto;
-  /* Don't allow the posts panel to grow or shrink */
-}
-
-.post-item {
-  cursor: pointer;
-  /* Change cursor to pointer on hover */
-  margin-bottom: 20px;
-  /* Add spacing between posts */
-}
-
-.content {
-  flex: 1;
-  /* Allow content to grow and occupy remaining space */
-  padding: 20px;
-  /* Add padding for spacing */
+@media (max-width: 768px) {
+  .posts-panel, .content {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
 }
 </style>
