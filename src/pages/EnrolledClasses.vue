@@ -29,13 +29,30 @@
         <p class="text-xl max-w-lg text-center mx-auto enrolled-classes-text" v-else>You are not enrolled in any classes
           yet.</p>
 
-        <div>
-          <label class="text-xl max-w-lg text-center mx-auto enrolled-classes-text" for="className">Class Name:</label>
-          <input type="text" id="className" v-model="newClassName" />
+        <div class="flex flex-row">
+          <label class="text-xl max-w-lg text-center mx-auto enrolled-classes-text content-center" for="className">Class Name:</label>
+<div>
+
+  <input
+    type="email"
+    id="className"
+    placeholder="Course name"
+    class="px-6 py-2 mt-1 ml-2 w-full rounded-md border-gray-200 shadow-sm sm:text-sm text-black bg-zinc-300" v-model="newClassName"
+  />
+</div>
+          
         </div>
-        <div>
-          <label class="text-xl max-w-lg text-center mx-auto enrolled-classes-text" for="classId">Class Code:</label>
-          <input type="text" id="classId" v-model="newClassCode" />
+        <div class="flex flex-row">
+          <label class="text-xl max-w-lg text-center mx-auto enrolled-classes-text content-center" for="classId">Class Code:</label>
+          <div>
+
+            <input
+              type="code"
+              id="classCode"
+              placeholder="Course Code"
+              class="px-6 py-2 mt-1 ml-2.5 w-full rounded-md border-gray-200 shadow-sm sm:text-sm text-black bg-zinc-300" v-model="newClassCode"
+            />
+          </div>
         </div>
         <button @click="createNewClass">Create New Class</button>
 
@@ -122,7 +139,7 @@ export default {
         });
 
         this.enrolledClasses = response.data.enrolled_classes;
-        console.log(response.data.enrolled_classes);
+        console.log(response);
       } catch (error) {
         console.error('Failed to fetch enrolled classes:', error);
       }
@@ -155,7 +172,6 @@ export default {
     async enrollInClass(classCode) {
       try {
         const sessionID = localStorage.getItem('sessionID');
-
         const response = await axios.post('http://localhost:8000/enroll-in-class/', {
           sessionID,
           classCode,
@@ -163,7 +179,7 @@ export default {
 
         console.log(response.data.message);
         this.newCourseCode = '';
-        this.fetchEnrolledClasses();
+        await this.fetchEnrolledClasses();
       } catch (error) {
         console.error('Failed to enroll in class:', error);
       }
