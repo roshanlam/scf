@@ -18,10 +18,30 @@
           <section class="w-full max-w-4xl mx-auto">
             <h2 class="text-2xl font-semibold text-center mb-4">All Videos</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <div v-for="video in videos" :key="video.id" class="video-item rounded-lg overflow-hidden shadow-lg cursor-pointer p-4 bg-gray-50">
+              <div v-for="video in videos" :key="video.id" class="video-item rounded-lg overflow-hidden shadow-lg cursor-pointer p-4 bg-gray-50" @click="selectVideo(video)">
                 <VideoPlayer :youtubeVideoId="getVideoId(video.video_link)" :videoSource="video.video_link" />
                 <div>
                   <h3 class="font-bold mt-2">{{ video.title }}</h3>
+                </div>
+              </div>
+            </div>
+            <div v-if="selectedVideoUrl" class="selected-video mt-6" ref="selectedVideo">
+              <VideoPlayer :videoSource="selectedVideoUrl" :youtubeVideoId="getVideoId(selectedVideoUrl)" />
+              <div v-if="selectedVideoQuestions && selectedVideoQuestions.length > 0" class="mt-4">
+                <h4 class="font-semibold mb-2">Video Questions</h4>
+                <div v-for="(question, index) in selectedVideoQuestions" :key="index" class="mb-4">
+                  <p class="font-medium mb-2">{{ question.question }}</p>
+                  <div class="flex flex-col space-y-2">
+                    <label v-for="(answer, answerIndex) in question.answers" :key="answerIndex" class="flex items-center space-x-2">
+                      <input type="radio" :name="`question-${index}`" :value="answerIndex" v-model="selectedAnswers[index]" class="form-radio text-[#FF4136]">
+                      <span>{{ answer }}</span>
+                    </label>
+                  </div>
+                  <div v-if="hasSubmittedAnswers" class="mt-2">
+                    <span v-if="answerCorrectness[index]" class="text-green-500">Correct</span>
+                    <span v-else class="text-red-500">Incorrect</span>
+                  </div>
+                  <button @click="verifyVideoQuestionAnswers" class="btn">Submit</button>
                 </div>
               </div>
             </div>
@@ -32,9 +52,11 @@
   </template>
   
   
+  
 
 <script>
 import axios from 'axios';
+import {nextTick, onMounted, ref} from 'vue';
 import VideoPlayer from '../components/VideoPlayer.vue';
 
 export default {
@@ -155,6 +177,15 @@ export default {
             this.selectedVideoUrl = video.video_link;
             this.selectedVideoQuestions = video.questions;
             this.selectedAnswers = new Array(video.questions.length).fill('');
+            this.scrollToVideo();
+        },
+        scrollToVideo(){
+            this.$nextTick(() =>{
+                const videoElement = this.$refs.selectedVideo;
+                if (videoElement){
+                    videoElement.scrollIntoView({behavior: 'smooth', block: 'start' })
+                }
+            });
         },
         isAnswerCorrect(selectedAnswer, correctAnswerIndex, index) {
             // Check if the selected answer index matches the correct answer index
