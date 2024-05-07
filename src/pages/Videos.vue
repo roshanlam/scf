@@ -240,7 +240,8 @@ export default {
   .video-item, .selected-video {
     background-color: #f9fafb; /* Light grey background for better readability */
   }
-  
+
+
   @media (max-width: 768px) {
     .video-list, .selected-video {
       flex-direction: column;
