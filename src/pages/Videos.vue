@@ -1,73 +1,47 @@
 <template>
-    <div id="app" class="bg-white font-sans text-white">
-        <div class="container mx-auto px-11 py-12">
-            <header class="fixed top-0 inset-x-0 z-50 bg-white flex justify-between items-center py-4">
-                <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer ml-7">
-                    <span class="text-[#FF4136] font-bold">Socio</span><span
-                        class="text-[#2A3945] font-bold">Coders</span>
-                </router-link>
-
-                <nav class="flex items-center space-x-6">
-                    <h2>Select Class</h2>
-                    <p v-if="userPoints !== null" class="text-lg font-semibold text-gray-600">{{ userPoints }} Points
-                    </p>
-                    <select v-model="selectedCourseId" :placeholder="'Select course'">
-                        <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">( {{
-                            classItem.class_name }} )</option>
-                    </select>
-                    <router-link to="/forum"
-                        class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Forum</router-link>
-
-                    <router-link to="/enrolled-classes"
-                        class="text-lg text-white bg-[#FF4136] px-6 py-2 rounded-full hover:bg-white hover:text-[#FF4136] transition duration-300 ease-in-out flex items-center justify-center">Courses</router-link>
-                </nav>
-            </header>
-
-            <main class="flex flex-col items-center justify-start pt-32 min-h-screen">
-                <div class="content">
-                    <div class="videos-panel">
-                        <h2>All Videos</h2>
-                        <div class="video-container">
-                            <div class="video-list">
-                                <div v-for="video in videos" :key="video.id" class="video-item"
-                                    @click="selectVideo(video)">
-                                    <h3>{{ video.title }}</h3>
-                                    <p>{{ video.url }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="selected-video">
-                            <iframe v-if="selectedVideoUrl" :src="embedUrl(selectedVideoUrl)" frameborder="0" allowfullscreen></iframe>
-                            <p v-else>No video selected</p>
-
-                            <div v-if="selectedVideoQuestions">
-                                <h3>Video Questions</h3>
-                                <div v-for="(question, index) in selectedVideoQuestions" :key="index" class="question">
-                                    <p>{{ question.question }}</p>
-                                    <div class="choices">
-                                        <label v-for="(choice, choiceIndex) in question.answers" :key="choiceIndex">
-                                            <input type="radio" :value="choice" v-model="selectedAnswers[index]">
-                                            {{ choice }}
-                                        </label>
-                                    </div>
-                                    <!-- Checkmark or "X" based on correctness -->
-                                    <span v-if="hasSubmittedAnswers">{{ answerCorrectness[index] ? '✅' : '❌' }}</span>
-                                </div>
-                                <button @click="verifyVideoQuestionAnswers">Submit</button>
-                            </div>
-                        </div>
-                    </div>
+    <div id="app" class="bg-white font-sans">
+      <div class="container mx-auto px-4 py-4">
+        <header class="bg-white fixed top-0 inset-x-0 z-50 shadow-md py-4 px-6 flex justify-between items-center">
+        <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer ml-7">
+          <span class="text-[#FF4136] font-bold">Socio</span><span class="text-[#2A3945] font-bold">Coders</span>
+        </router-link>          <nav class="flex items-center space-x-4">
+            <select v-model="selectedCourseId" class="rounded border border-gray-300 bg-white text-gray-700">
+              <option v-for="classItem in enrolledClasses" :key="classItem.id" :value="classItem.id">
+                {{ classItem.class_name }}
+              </option>
+            </select>
+            <router-link to="/forum" class="btn">Forum</router-link>
+            <router-link to="/enrolled-classes" class="btn">Courses</router-link>
+          </nav>
+        </header>
+        <main class="pt-24 flex flex-col items-center justify-start">
+          <section class="w-full max-w-4xl mx-auto">
+            <h2 class="text-2xl font-semibold text-center mb-4">All Videos</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div v-for="video in videos" :key="video.id" class="video-item rounded-lg overflow-hidden shadow-lg cursor-pointer p-4 bg-gray-50">
+                <VideoPlayer :youtubeVideoId="getVideoId(video.video_link)" :videoSource="video.video_link" />
+                <div>
+                  <h3 class="font-bold mt-2">{{ video.title }}</h3>
                 </div>
-            </main>
-        </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
-</template>
+  </template>
+  
+  
 
 <script>
 import axios from 'axios';
+import VideoPlayer from '../components/VideoPlayer.vue';
 
 export default {
     name: 'Videos',
+    components: {
+        VideoPlayer
+    },
     data() {
         return {
             enrolledClasses: [],
@@ -209,31 +183,36 @@ export default {
 </script>
 
 <style>
-.main {
-    color: black;
-}
-
-.video-container {
-    display: flex;
-}
-
-.video-list {
-    margin-top: 20px;
-    overflow-y: auto;
-    flex: 1;
-}
-
-.video-item {
+  .btn {
+    background-color: #FF4136;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
     cursor: pointer;
-    margin-bottom: 20px;
-}
-
-.selected-video {
-    margin-left: 20px;
-}
-
-.selected-video iframe {
-    width: 560px;
-    height: 315px;
-}
-</style>
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #E33E2B;
+  }
+  
+  .video-item iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+  
+  .selected-video iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+  
+  .video-item, .selected-video {
+    background-color: #f9fafb; /* Light grey background for better readability */
+  }
+  
+  @media (max-width: 768px) {
+    .video-list, .selected-video {
+      flex-direction: column;
+    }
+  }
+  </style>

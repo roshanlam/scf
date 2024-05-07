@@ -3,7 +3,9 @@
     <div class="container mx-auto px-4 py-4">
       <header class="bg-white fixed top-0 inset-x-0 z-50 shadow-md">
         <div class="container flex justify-between items-center py-4 px-6 mx-auto">
-          <router-link to="/" class="text-3xl font-bold text-[#FF4136]">SocioCoders</router-link>
+          <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer ml-7">
+            <span class="text-[#FF4136] font-bold">Socio</span><span class="text-[#2A3945] font-bold">Coders</span>
+          </router-link>
           <nav class="flex items-center space-x-4">
             <p v-if="userPoints !== null" class="text-lg font-semibold">
               {{ userPoints }} Points

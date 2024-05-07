@@ -2,8 +2,8 @@
   <div id="app" class="bg-gray-100 font-sans">
     <div class="container mx-auto px-4 py-4">
       <header class="bg-white fixed top-0 inset-x-0 z-50 shadow flex justify-between items-center py-2 px-4">
-        <router-link to="/" class="text-3xl font-bold text-[#FF4136] flex items-center gap-2">
-          <span class="text-[#FF4136]">Socio</span><span class="text-gray-800">Coders</span>
+        <router-link to="/" class="text-3xl font-bold text-[#FF4136] cursor-pointer ml-7">
+          <span class="text-[#FF4136] font-bold">Socio</span><span class="text-[#2A3945] font-bold">Coders</span>
         </router-link>
         <nav class="flex items-center gap-4">
           <div class="flex items-center gap-2">
