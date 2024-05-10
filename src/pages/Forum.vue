@@ -22,29 +22,31 @@
       </header>
       <div class="text-center pt-24">
         <div class="inline-block w-full max-w-md p-4 bg-white rounded-lg shadow">
+              <input type="text" placeholder="Title" v-model="newPostTitle">
+              <textarea placeholder="Content" v-model="newPostContent"></textarea>
+              <button class="btn mr-2" @click="postToForum">Create New Post</button>
           <input type="text" placeholder="Search Posts" v-model="searchQuery" @input="filterPosts" class="p-2 w-full border rounded mb-4">
-          <button class="btn mr-2" @click="showNewPostForm = true">Create New Post</button>
-          <button class="btn" @click="updateUserPoints">Add Point</button>
         </div>
         <section class="mt-4">
-          <h2 class="font-semibold text-lg mb-4">All Posts</h2>
-          <div v-for="post in filteredPosts" :key="post.id" class="p-4 bg-white rounded-lg shadow my-2 cursor-pointer" @click="togglePostSelection(post)">
-            <h3 class="font-bold">{{ post.title }}</h3>
-            <p>{{ post.content }}</p>
-          </div>
-          <div v-if="selectedPost" class="bg-white rounded-lg shadow mt-4 p-4">
-            <h3 class="font-bold">{{ selectedPost.title }}</h3>
-            <p>{{ selectedPost.content }}</p>
-            <div v-for="comment in selectedPostComments" :key="comment.id" class="mt-2 p-2 border-t">
-              <h4 class="font-semibold">{{ comment.title }}</h4>
-              <p>{{ comment.content }}</p>
+            <h2 class="font-semibold text-lg mb-4">All Posts</h2>
+            <div v-for="post in filteredPosts" :key="post.id" class="p-4 bg-white rounded-lg shadow my-2 cursor-pointer">
+                <div @click="togglePostSelection(post)" class="cursor-pointer">
+                    <h3 class="font-bold">{{ post.title }}</h3>
+                    <p>{{ post.content }}</p>
+                </div>
+                <div v-if="selectedPost === post" class="mt-4">
+                    <input type="text" placeholder="Comment Title" v-model="commentName" class="p-2 w-full border rounded">
+                    <textarea placeholder="Comment Body" v-model="commentBody" class="p-2 w-full border rounded my-2"></textarea>
+                    <button class="btn" @click="sendComment">Send Comment</button>
+                </div>
+                <div v-if="selectedPost === post">
+                  <h2 class="comments-heading mt-2 p-2 border-t">Comments</h2>
+                    <div v-for="comment in selectedPostComments" :key="comment.id" class="mt-2 p-2 border-t">
+                        <h4 class="font-semibold">{{ comment.title }}</h4>
+                        <p>{{ comment.content }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="mt-4">
-              <input type="text" placeholder="Comment Title" v-model="commentName" class="p-2 w-full border rounded">
-              <textarea placeholder="Comment Body" v-model="commentBody" class="p-2 w-full border rounded my-2"></textarea>
-              <button class="btn" @click="sendComment">Send Comment</button>
-            </div>
-          </div>
         </section>
       </div>
     </div>
@@ -73,7 +75,8 @@ export default {
       searchQuery: '',
       showNewPostForm: false,
       showSelectedPostDetails: false,
-      userPoints: null
+      userPoints: null,
+
 
     };
   },
@@ -96,13 +99,12 @@ export default {
   },
   methods: {
     togglePostSelection(post) {
-      if (this.selectedPost === post) {
-        this.selectedPost = null; // Deselect the post if already selected
-      } else {
-        this.selectedPost = post; // Select the post if not already selected
-        this.selectPost(post)
-        // Fetch comments or other actions if needed
-      }
+        if (this.selectedPost === post) {
+            this.selectedPost = null; // Deselect the post if already selected
+        } else {
+            this.selectedPost = post; // Select the post if not already selected
+            this.selectPost(post);
+        }
     },
     async getUserPoints() {
       try {
@@ -116,6 +118,22 @@ export default {
       } catch (error) {
         console.error('Error fetching user points:', error);
       }
+    },
+    async postToForum() {
+        try {
+          const response = await axios.post(`http://localhost:8000/post-to-forum/`, {
+              sessionID: localStorage.getItem('sessionID'),
+              classID: this.selectedCourseId,
+              title: this.newPostTitle,
+              content: this.newPostContent
+          });
+
+          console.log("Response received:", response.data);
+        } catch (error) {
+          console.error("Failed to send forum post:", error);
+        }
+
+        this.fetchPosts();
     },
     async updateUserPoints() {
       try {
@@ -166,10 +184,9 @@ export default {
 
           console.log(response.data);
 
-          this.newPostTitle = '';
-          this.newPostContent = '';
-
-          this.fetchPosts();
+          this.commentBody = '';
+          this.commentName = '';
+          this.togglePostSelection(this.selectedPost);
         }
       } catch (error) {
         console.error("Failed to send forum post:", error);
@@ -279,6 +296,11 @@ body {
 
 .btn:hover {
   background-color: #E33E2B;
+}
+
+.comments-heading {
+    color: red;
+    font-weight: bold;
 }
 
 header {

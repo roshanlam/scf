@@ -195,7 +195,7 @@ export default {
         verifyVideoQuestionAnswers() {
             this.selectedAnswers.forEach((selectedAnswer, index) => {
                 // Check if the selected answer index matches the correct answer index
-                this.answerCorrectness[index] = (selectedAnswer === this.selectedVideoQuestions[index].answers[this.selectedVideoQuestions[index].correct_answer_index]);
+                this.answerCorrectness[index] = (selectedAnswer === this.selectedVideoQuestions[index].correct_answer_index);
                 if(this.answerCorrectness[index]) {
                     this.updateUserPoints();
                 }
