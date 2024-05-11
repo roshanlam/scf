@@ -75,7 +75,8 @@ export default {
       selectedCourseId: isNaN(Number(localStorage.getItem('selectedCourse'))) ? null : Number(localStorage.getItem('selectedCourse')),
       toastMessage: '',
       showToast: false,
-      toastType: ''
+      toastType: '',
+      userPoints: null 
     };
   },
   mounted() {
