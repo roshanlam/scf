@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Index from '../pages/Index.vue';
 import EnrolledClasses from '../pages/EnrolledClasses.vue';

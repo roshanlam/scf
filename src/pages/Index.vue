@@ -26,11 +26,11 @@ export default {
       }
     },
     login() {
+      console.log( import.meta.env.VITE_GOOGLE_CLIENT_ID);
       googleSdkLoaded(google => {
         google.accounts.oauth2
           .initCodeClient({
-            client_id:
-              "782259591806-dh78pai5geh3kjpusv1ins5v988ogbkc.apps.googleusercontent.com",
+            client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
             scope: "email profile openid",
             redirect_uri: "http://localhost:5173",
             callback: response => {
